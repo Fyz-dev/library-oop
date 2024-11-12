@@ -1,28 +1,28 @@
-<h1 align="center">Бібліотека</h1>
+<h1 align="center">Library</h1>
 
-## Опис предметної області
+## Description of the subject area
 
-Система бібліотеки складається з кількох основних об'єктів, таких як книги, автори та видавці. Книги можуть бути двох типів: надрукованими (PrintedBook) та електронними (EBook). Всі книги мають спільні властивості, але для кожного типу існують додаткові особливості.
+A library system consists of several basic objects, such as books, authors, and publishers. Books can be of two types: printed (PrintedBook) and electronic (EBook). All books have common properties, but for each type there are additional features.
 
-### Книги
+### Books
 
-У системі є базовий інтерфейс **IBook**, який містить загальні характеристики книги, такі як назва, жанр, автор. Від цього класу наслідуються два основних типи книг:
+The system has a basic **IBook** interface, which contains the general characteristics of the book, such as title, genre, author. Two main types of books are inherited from this class:
 
-- **PrintedBook** — це надруковані книги, які мають фізичні копії та тип обкладинки.
-- **EBook** — це електронні книги, які не мають фізичних копій і читаються на електронних пристроях.
+- **PrintedBook** are printed books that have physical copies and cover type.
+- **EBook** are electronic books that do not have physical copies and are read on electronic devices.
 
-### Автори
+### Authors
 
-**Автори** є важливим елементом книг і можуть бути пов'язані з кількома книгами. Кожен автор має ім'я, прізвище і може мати біографію.
+**Authors** are an important element of books and can be associated with multiple books. Each author has a name, surname and may have a biography.
 
-### Видавці
+### Publishers
 
-**Видавці** — це організації або особи, які публікують книги. Вони мають назву та адресу. Видавець також може бути пов'язаний з кількома книгами.
+**Publishers** are organizations or individuals that publish books. They have a name and an address. A publisher can also be associated with multiple books.
 
-### Бібліотека
+### Library
 
-**Бібліотека** (клас **Library**) є контейнером для книг. Вона зберігає колекцію книг і дозволяє додавати, видаляти та шукати книги. Бібліотека може працювати з книгами обох типів — надрукованими та електронними — завдяки поліморфізму.
+**Library** (class **Library**) is a container for books. It stores a collection of books and allows you to add, delete, and search for books. The library can work with both types of books — printed and electronic — thanks to polymorphism.
 
-## Діаграмма класів
+## Class diagram
 
 ![diagram](docs/LibraryClassDiagram.png)
