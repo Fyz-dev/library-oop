@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Library.Interface
 {
-    internal interface IBook
+    public interface IBook
     {
         string Title { get; set; }
 

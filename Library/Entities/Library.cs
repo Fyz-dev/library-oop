@@ -1,9 +1,10 @@
 ﻿using Library.Interface;
 using System;
 using System.Collections.Generic;
+
 namespace Library.Entities
 {
-    internal class Library
+    public class Library
     {
         private List<IBook> books;
 

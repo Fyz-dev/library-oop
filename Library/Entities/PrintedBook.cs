@@ -4,7 +4,7 @@ using Library.Interface;
 
 namespace Library.Entities
 {
-    internal class PrintedBook : IBook
+    public class PrintedBook : IBook
     {
         public string Title
         {
@@ -36,7 +36,7 @@ namespace Library.Entities
             set => throw new NotImplementedException();
         }
 
-        public int AvailableCopies
+        public uint AvailableCopies
         {
             get => throw new NotImplementedException();
             set => throw new NotImplementedException();
@@ -53,7 +53,8 @@ namespace Library.Entities
             BookGenre genre,
             Author author,
             Publisher publisher,
-            string isbn
+            string isbn,
+            uint availableCopies = 0
         )
         {
             throw new NotImplementedException();

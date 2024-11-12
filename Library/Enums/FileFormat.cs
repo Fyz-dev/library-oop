@@ -1,6 +1,6 @@
 ﻿namespace Library.Enums
 {
-    internal enum FileFormat
+    public enum FileFormat
     {
         PDF,
         EBUP,

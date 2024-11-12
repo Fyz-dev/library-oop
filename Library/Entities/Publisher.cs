@@ -2,7 +2,7 @@
 
 namespace Library.Entities
 {
-    internal class Publisher
+    public class Publisher
     {
         public string Name
         {

@@ -2,7 +2,7 @@
 
 namespace Library.Entities
 {
-    internal class Author
+    public class Author
     {
         public string FirstName
         {

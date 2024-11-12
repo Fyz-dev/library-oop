@@ -4,7 +4,7 @@ using System;
 
 namespace Library.Entities
 {
-    internal class EBook : IBook
+    public class EBook : IBook
     {
         public string Title
         {
@@ -45,7 +45,8 @@ namespace Library.Entities
         public EBook(
             string title,
             BookGenre genre,
-            Author author
+            Author author,
+            FileFormat fileFormat = FileFormat.OTHER
         )
         {
             throw new NotImplementedException();
