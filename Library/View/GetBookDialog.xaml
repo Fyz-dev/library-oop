@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="Library.View.GetBookDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Library.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Library.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="using:Library.ViewModel"
+    d:DataContext="{d:DesignInstance Type=viewmodel:GetBookDialogViewModel}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    CloseButtonText="Cancle"
+    Closing="OnClosing"
+    DefaultButton="Primary"
+    PrimaryButtonText="Buy or Reserve"
+    mc:Ignorable="d">
+    <ContentDialog.Resources>
+        <converters:NullToBooleanConverter x:Key="NullToBooleanConverter" />
+    </ContentDialog.Resources>
+
+    <ContentDialog.Title>
+        <Grid Width="400">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Select Visitor" />
+        </Grid>
+    </ContentDialog.Title>
+
+    <ScrollView>
+        <StackPanel Width="400">
+            <StackPanel>
+                <InfoBar
+                    x:Name="Error"
+                    Title="Error"
+                    IsClosable="False"
+                    IsIconVisible="True"
+                    IsOpen="{Binding ErrorMessage, Mode=TwoWay, Converter={StaticResource NullToBooleanConverter}}"
+                    Message="{Binding ErrorMessage, Mode=TwoWay}"
+                    Severity="Error" />
+            </StackPanel>
+
+            <Grid>
+                <StackPanel x:Name="ConstructorStackPanel" Spacing="20">
+                    <StackPanel Spacing="12">
+                        <ComboBox
+                            DisplayMemberPath="Name"
+                            ItemsSource="{Binding Visitors}"
+                            PlaceholderText="Select visitor"
+                            SelectedItem="{Binding SelectedVisitor, Mode=TwoWay}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollView>
+</ContentDialog>

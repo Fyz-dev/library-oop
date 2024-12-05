@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="Library.View.Visitors"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Library.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="using:Library.ViewModel"
+    d:DataContext="{d:DesignInstance Type=viewmodel:VisitorsViewModel}"
+    Background="Transparent"
+    mc:Ignorable="d">
+
+    <Grid x:Name="MainGrid">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Padding="36,40" Spacing="24">
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="6">
+                        <TextBlock VerticalAlignment="Center">
+                            <Run Text="Visitors founds:" />
+                            <Run Text="{Binding Visitors.Count}" />
+                        </TextBlock>
+                    </StackPanel>
+                    <Button
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        Click="OnOpenAddDialog"
+                        Content="Add visitor"
+                        Style="{StaticResource AccentButtonStyle}" />
+                </Grid>
+                <GridView
+                    x:Name="itemGridView"
+                    Grid.Row="1"
+                    Height="Auto"
+                    Margin="-4,-12,0,-4"
+                    AutomationProperties.AutomationId="ItemGridView"
+                    AutomationProperties.Name="Items In Group"
+                    IsItemClickEnabled="True"
+                    IsSwipeEnabled="False"
+                    ItemClick="ItemGridView_ItemClick"
+                    ItemsSource="{Binding Visitors}"
+                    SelectionMode="None">
+                    <GridView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid
+                                x:Name="controlRoot"
+                                Width="280"
+                                HorizontalAlignment="Stretch"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                <Grid Margin="16" VerticalAlignment="Stretch">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel
+                                        Grid.Row="0"
+                                        HorizontalAlignment="Stretch"
+                                        Orientation="Horizontal"
+                                        Spacing="8">
+                                        <Border
+                                            Width="24"
+                                            Height="24"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Background="DimGray"
+                                            CornerRadius="12">
+                                            <FontIcon
+                                                Margin="0,0,0,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="14"
+                                                Glyph="&#xE77B;" />
+                                        </Border>
+                                        <TextBlock
+                                            x:Name="titleText"
+                                            VerticalAlignment="Center"
+                                            Style="{StaticResource BodyStrongTextBlockStyle}"
+                                            Text="{Binding Name}"
+                                            TextLineBounds="TrimToCapHeight"
+                                            TextWrapping="NoWrap" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+
+                    </GridView.ItemTemplate>
+                </GridView>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="Library.View.Home"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Library.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Library.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:type="using:Library.Entities"
+    xmlns:viewmodel="using:Library.ViewModel"
+    d:DataContext="{d:DesignInstance Type=viewmodel:HomeViewModel}"
+    Background="Transparent"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <converters:GenresToStringConverter x:Key="GenresToStringConverter" />
+        <converters:AuthorsToStringConverter x:Key="AuthorsToStringConverter" />
+    </Page.Resources>
+
+    <Grid x:Name="MainGrid">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel Padding="36,40" Spacing="24">
+                <Grid ColumnSpacing="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.2*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox
+                        Grid.Column="0"
+                        HorizontalAlignment="Stretch"
+                        PlaceholderText="Search"
+                        Text="{Binding SearchQuery, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <Button
+                        Grid.Column="2"
+                        HorizontalAlignment="Right"
+                        Click="OnOpenAddDialog"
+                        Content="Add book"
+                        Style="{StaticResource AccentButtonStyle}" />
+                </Grid>
+                <Grid VerticalAlignment="Center" ColumnSpacing="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="0.5*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel
+                        Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="6">
+                        <TextBlock VerticalAlignment="Center">
+                            <Run Text="Books founds:" />
+                            <Run Text="{Binding Books.Count}" />
+                        </TextBlock>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="2"
+                        Orientation="Horizontal"
+                        Spacing="8">
+                        <FontIcon Glyph="&#xF168;" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                            Text="Filter by:" />
+                        <ComboBox HorizontalAlignment="Right" SelectedIndex="{Binding SelectedTypeBookIndex, Mode=TwoWay}">
+                            <x:String>All</x:String>
+                            <x:String>Printed Book</x:String>
+                            <x:String>Printed Book Available</x:String>
+                            <x:String>E-Book</x:String>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel
+                        Grid.Column="3"
+                        Orientation="Horizontal"
+                        Spacing="8">
+                        <FontIcon Foreground="{StaticResource TextFillColorSecondaryBrush}" Glyph="&#xE71C;" />
+                        <TextBlock
+                            VerticalAlignment="Center"
+                            Foreground="{StaticResource TextFillColorSecondaryBrush}"
+                            Text="Search by:" />
+                        <ComboBox HorizontalAlignment="Right" SelectedIndex="{Binding SelectedSearchCriterionIndex, Mode=TwoWay}">
+                            <x:String>All</x:String>
+                            <x:String>Title</x:String>
+                            <x:String>Authors</x:String>
+                            <x:String>Genres</x:String>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+                <GridView
+                    x:Name="itemGridView"
+                    Grid.Row="1"
+                    Height="Auto"
+                    Margin="-4,-12,0,-4"
+                    AutomationProperties.AutomationId="ItemGridView"
+                    AutomationProperties.Name="Items In Group"
+                    IsItemClickEnabled="True"
+                    IsSwipeEnabled="False"
+                    ItemClick="ItemGridView_ItemClick"
+                    ItemsSource="{Binding Books}"
+                    SelectionMode="None">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="type:Book">
+                            <Grid
+                                x:Name="controlRoot"
+                                Width="350"
+                                MinHeight="105"
+                                HorizontalAlignment="Stretch"
+                                Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource ControlCornerRadius}">
+                                <Grid Margin="16" VerticalAlignment="Stretch">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Grid.Row="0" Spacing="8">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel
+                                                Grid.Column="0"
+                                                VerticalAlignment="Center"
+                                                Orientation="Horizontal"
+                                                Spacing="2">
+                                                <TextBlock
+                                                    x:Name="titleText"
+                                                    Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                    Text="{Binding Title}"
+                                                    TextLineBounds="TrimToCapHeight"
+                                                    TextWrapping="NoWrap" />
+                                                <TextBlock
+                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                    Text="|"
+                                                    TextLineBounds="TrimToCapHeight"
+                                                    TextWrapping="NoWrap" />
+                                                <TextBlock
+                                                    MaxWidth="150"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                                    Text="{Binding Genres, Converter={StaticResource GenresToStringConverter}}"
+                                                    TextLineBounds="TrimToCapHeight"
+                                                    TextTrimming="WordEllipsis"
+                                                    TextWrapping="NoWrap" />
+                                            </StackPanel>
+                                        </Grid>
+                                        <TextBlock
+                                            MaxHeight="50"
+                                            Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                                            LineStackingStrategy="BlockLineHeight"
+                                            Style="{StaticResource CaptionTextBlockStyle}"
+                                            Text="{Binding Authors, Converter={StaticResource AuthorsToStringConverter}}"
+                                            TextTrimming="WordEllipsis"
+                                            TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+                </GridView>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Page>

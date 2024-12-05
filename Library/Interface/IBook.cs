@@ -1,5 +1,6 @@
 ﻿using Library.Entities;
 using Library.Enums;
+using System.Collections.Generic;
 
 namespace Library.Interface
 {
@@ -7,8 +8,12 @@ namespace Library.Interface
     {
         string Title { get; set; }
 
-        BookGenre Genre { get; set; }
+        string Description { get; set; }
 
-        Author Author { get; set; }
+        List<BookGenre> Genres { get; set; }
+
+        List<Author> Authors { get; set; }
+
+        public string ISBN { get; set; }
     }
 }

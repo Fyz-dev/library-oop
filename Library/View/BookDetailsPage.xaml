@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Page
+    x:Class="Library.View.BookDetailsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Library.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="using:Library.ViewModel"
+    d:DataContext="{d:DesignInstance Type=viewmodel:BookDetailsPageViewModel}"
+    Background="Transparent"
+    mc:Ignorable="d">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+
+        <StackPanel Padding="40,36" Spacing="24">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+
+                </Grid.ColumnDefinitions>
+                <Button
+                    Grid.Column="0"
+                    Padding="5,6"
+                    Background="Transparent"
+                    BorderBrush="Transparent"
+                    Click="ButtonBack_Click">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <FontIcon FontSize="16" Glyph="&#xE72B;" />
+                        <TextBlock Text="Return" />
+                    </StackPanel>
+                </Button>
+                <Button
+                    Grid.Column="2"
+                    Padding="5,6"
+                    Click="ButtonRemove_Click"
+                    Style="{ThemeResource AccentButtonStyle}">
+                    <StackPanel Orientation="Horizontal" Spacing="5">
+                        <FontIcon FontSize="16" Glyph="&#xE74D;" />
+                        <TextBlock Text="Remove" />
+                    </StackPanel>
+                </Button>
+            </Grid>
+            <StackPanel VerticalAlignment="Center" Spacing="10">
+                <TextBlock
+                    Grid.Row="0"
+                    VerticalAlignment="Bottom"
+                    Style="{StaticResource TitleTextBlockStyle}"
+                    Text="{Binding Book.Title}" />
+                <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                    <Run Text="ISBN:" />
+                    <Run Text="{Binding Book.ISBN}" />
+                </TextBlock>
+            </StackPanel>
+
+            <StackPanel VerticalAlignment="Center" Spacing="10">
+                <TextBlock
+                    Grid.Row="0"
+                    Style="{StaticResource SubtitleTextBlockStyle}"
+                    Text="Description" />
+                <TextBlock
+                    HorizontalAlignment="Left"
+                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                    Text="{Binding Book.Description}"
+                    TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!--  Genres  -->
+            <ScrollViewer Padding="0,0,0,14" HorizontalScrollBarVisibility="Auto">
+                <StackPanel VerticalAlignment="Center" Spacing="10">
+                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Genres" />
+                    <ItemsRepeater ItemsSource="{Binding Book.Genres}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Horizontal" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Grid
+                                    Margin="0,0,5,0"
+                                    Padding="10,3"
+                                    HorizontalAlignment="Center"
+                                    Background="{ThemeResource CardBackgroundFillColorDefault}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="15">
+                                    <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!--  Authors  -->
+            <ScrollViewer Padding="0,0,0,14" HorizontalScrollBarVisibility="Auto">
+                <StackPanel VerticalAlignment="Center" Spacing="10">
+                    <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Authors" />
+
+                    <ItemsRepeater ItemsSource="{Binding Book.Authors}">
+                        <ItemsRepeater.Layout>
+                            <StackLayout Orientation="Horizontal" />
+                        </ItemsRepeater.Layout>
+                        <ItemsRepeater.ItemTemplate>
+                            <DataTemplate>
+                                <Grid
+                                    Margin="0,0,5,0"
+                                    Padding="10,3"
+                                    HorizontalAlignment="Center"
+                                    Background="{ThemeResource CardBackgroundFillColorDefault}"
+                                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}"
+                                    BorderThickness="1"
+                                    CornerRadius="15">
+                                    <TextBlock Style="{StaticResource BodyStrongTextBlockStyle}" Text="{Binding FullName}" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsRepeater.ItemTemplate>
+                    </ItemsRepeater>
+                </StackPanel>
+
+            </ScrollViewer>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Expander HorizontalAlignment="Stretch" HorizontalContentAlignment="Left">
+                    <Expander.Header>
+                        <TextBlock>Details info</TextBlock>
+                    </Expander.Header>
+                    <Expander.Content>
+                        <Grid HorizontalAlignment="Left">
+                            <TextBlock
+                                IsTextSelectionEnabled="True"
+                                LineHeight="25"
+                                LineStackingStrategy="BlockLineHeight"
+                                Text="{Binding Book.Details}"
+                                TextWrapping="Wrap" />
+                        </Grid>
+                    </Expander.Content>
+                </Expander>
+            </Grid>
+
+            <Button
+                x:Name="ButtonGetBook"
+                Click="ButtonGetBook_Click"
+                Content="Buy a book"
+                Style="{StaticResource AccentButtonStyle}" />
+        </StackPanel>
+    </ScrollViewer>
+</Page>

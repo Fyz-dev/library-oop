@@ -2,10 +2,12 @@
 {
     public enum BookGenre
     {
-        FANTASY,
-        HISTORICAL,
-        SCIENCE,
-        MYSTERY,
-        ROMANCE
+        Fantasy,
+        Historical,
+        Science,
+        Mystery,
+        Romance,
+        Education,
+        Technology
     }
 }

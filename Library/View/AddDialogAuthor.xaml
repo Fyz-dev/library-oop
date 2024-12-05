@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentDialog
+    x:Class="Library.View.AddDialogAuthor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="using:Library.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Library.View"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:viewmodel="using:Library.ViewModel"
+    d:DataContext="{d:DesignInstance Type=viewmodel:AddDialogAuthorViewModel}"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    CloseButtonText="Cancle"
+    Closing="OnClosing"
+    DefaultButton="Primary"
+    PrimaryButtonText="Add"
+    mc:Ignorable="d">
+    <ContentDialog.Resources>
+        <converters:NullToBooleanConverter x:Key="NullToBooleanConverter" />
+    </ContentDialog.Resources>
+
+    <ContentDialog.Title>
+        <Grid Width="400">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Add Author" />
+        </Grid>
+    </ContentDialog.Title>
+
+    <ScrollView>
+        <StackPanel Width="400">
+            <StackPanel>
+                <InfoBar
+                    x:Name="Error"
+                    Title="Error"
+                    IsClosable="False"
+                    IsIconVisible="True"
+                    IsOpen="{Binding ErrorMessage, Mode=TwoWay, Converter={StaticResource NullToBooleanConverter}}"
+                    Message="{Binding ErrorMessage, Mode=TwoWay}"
+                    Severity="Error" />
+            </StackPanel>
+
+            <Grid>
+                <!--  Constructor  -->
+                <StackPanel x:Name="ConstructorStackPanel" Spacing="20">
+                    <!--  First Name  -->
+                    <StackPanel Spacing="12">
+                        <TextBlock
+                            x:Name="FirstNameTextBlock"
+                            Style="{StaticResource BodyStrongTextBlockStyle}"
+                            Text="First Name"
+                            TextWrapping="Wrap" />
+                        <TextBox x:Name="FirstNameTextBox" Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                    <!--  Last Name  -->
+                    <StackPanel Spacing="12">
+                        <TextBlock
+                            x:Name="LastNameTextBlock"
+                            Style="{StaticResource BodyStrongTextBlockStyle}"
+                            Text="Last Name"
+                            TextWrapping="Wrap" />
+                        <TextBox x:Name="LastNameTextBox" Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                    <!--  Biography  -->
+                    <StackPanel Spacing="12">
+                        <TextBlock
+                            x:Name="BiographyTextBlock"
+                            Style="{StaticResource BodyStrongTextBlockStyle}"
+                            Text="Biography"
+                            TextWrapping="Wrap" />
+                        <TextBox x:Name="BiographyTextBox" Text="{Binding Biography, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollView>
+</ContentDialog>

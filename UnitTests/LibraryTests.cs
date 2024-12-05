@@ -1,7 +1,6 @@
-﻿using Library.Enums;
-using Library.Interface;
-using Library.Entities;
-using Lib = Library.Entities.Library;
+﻿using Library.Entities;
+using Library.Enums;
+using Lib = Library.Entities.LibraryEntitie;
 
 namespace UnitTests
 {
@@ -24,98 +23,103 @@ namespace UnitTests
         [TestMethod]
         [DataRow(null)]
         [DataRow("")]
-        public void Constructor_ShouldThrowArgumentException_WhenAddressIsNullOrEmpty(string address)
+        public void Constructor_ShouldThrowArgumentException_WhenAddressIsNullOrEmpty(
+            string address
+        )
         {
             // Act & Assert
             Assert.ThrowsException<ArgumentException>(() => new Lib(address));
         }
 
         [TestMethod]
-        [DataRow("Book Title 1", 1, "Book Title 1")]
-        [DataRow("Author", 2, "Book Title 1", "Book Title 2")]
-        [DataRow("FANTASY", 1, "Book Title 1")] 
-        [DataRow("Publisher", 2, "Book Title 1", "Book Title 2")]  
-        [DataRow("Nonexistent Title", 0)]
-        [DataRow("Nonexistent Author", 0)]
-        [DataRow("SCIENCE", 1, "Book Title 2")] 
-        [DataRow("Book Title", 2, "Book Title 1", "Book Title 2")]
-        public void FindBooks_ShouldReturnBooksBasedOnSearchCriteria(string searchQuery, int expectedCount, params string[] expectedTitles)
-        {
-            // Arrange
-            Author author = new Author("Author", "LastName");
-            Publisher publisher = new Publisher("Publisher", "Publisher Address");
-
-            PrintedBook printedBook1 = new PrintedBook("Book Title 1", BookGenre.FANTASY, author, publisher, "978-1234567890");
-            PrintedBook printedBook2 = new PrintedBook("Book Title 2", BookGenre.SCIENCE, author, publisher, "978-0987654321");
-            EBook eBook1 = new EBook("EBook Title 1", BookGenre.FANTASY, author);
-            EBook eBook2 = new EBook("EBook Title 2", BookGenre.SCIENCE, author);
-
-            Lib library = new Lib("123 Library St");
-
-            library.AddBook(printedBook1);
-            library.AddBook(printedBook2);
-            library.AddBook(eBook1);
-            library.AddBook(eBook2);
-
-            // Act
-            List<IBook> foundBooks = library.FindBooks(searchQuery);
-
-            // Assert
-            Assert.AreEqual(expectedCount, foundBooks.Count);
-
-            if (expectedCount > 0)
-            {
-                List<string> foundTitles = foundBooks.Select(b => b.Title).ToList();
-                foreach (var expectedTitle in expectedTitles)
-                    Assert.IsTrue(foundTitles.Contains(expectedTitle), $"Expected book title '{expectedTitle}' was not found.");
-            }
-        }
-
-        [TestMethod]
         public void GetPrintedBooks_ShouldReturnOnlyPrintedBooks()
         {
             // Arrange
-            Author author = new Author("Author", "LastName");
-            Publisher publisher = new Publisher("Publisher", "Publisher Address");
-            PrintedBook printedBook1 = new PrintedBook("Printed Book 1", BookGenre.FANTASY, author, publisher, "978-1234567890", 5);
-            PrintedBook printedBook2 = new PrintedBook("Printed Book 2", BookGenre.SCIENCE, author, publisher, "978-0987654321", 0);
-            EBook eBook1 = new EBook("EBook Title 1", BookGenre.FANTASY, author);
-            EBook eBook2 = new EBook("EBook Title 2", BookGenre.SCIENCE, author);
+            Author author = new Author("Author", "LastName", "description");
+
+            PrintedBook printedBook1 = new PrintedBook(
+                "Printed Book 1",
+                "Description",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author },
+                "9781234567890"
+            );
+
+            PrintedBook printedBook2 = new PrintedBook(
+                "Printed Book 2",
+                "Description",
+                new List<BookGenre> { BookGenre.Science },
+                new List<Author> { author },
+                "9780987654321"
+            );
+
+            EBook eBook1 = new EBook(
+                "EBook Title 1",
+                "Description",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author },
+                "9781234567890",
+                "http://example.com/preview"
+            );
+
+            EBook eBook2 = new EBook(
+                "EBook Title 2",
+                "Description",
+                new List<BookGenre> { BookGenre.Science },
+                new List<Author> { author },
+                "9780987654321",
+                "http://example.com/preview"
+            );
 
             Lib library = new Lib("Address");
-            library.Books.Add(printedBook1);
-            library.Books.Add(printedBook2);
-            library.Books.Add(eBook1);
-            library.Books.Add(eBook2);
+            library.AddBooks(printedBook1);
+            library.AddBooks(printedBook2);
+            library.AddBooks(eBook1);
+            library.AddBooks(eBook2);
 
             // Act
-            List<PrintedBook> printedBooks = library.GetPrintedBooks();
+            IEnumerable<PrintedBook> printedBooks = library.GetPrintedBooks();
 
             // Assert
-            Assert.AreEqual(2, printedBooks.Count);
+            Assert.AreEqual(2, printedBooks.Count());
             Assert.IsTrue(printedBooks.All(book => book is PrintedBook));
         }
 
         [TestMethod]
-        public void GetPrintedBooks_ShouldReturnOnlyPrintedBooksWithAvailableCopies_0()
+        public void GetPrintedBooks_ShouldReturnOnlyPrintedBooksWithAvailableCopies()
         {
             // Arrange
-            Author author = new Author("Author", "LastName");
-            Publisher publisher = new Publisher("Publisher", "Publisher Address");
-            PrintedBook printedBook1 = new PrintedBook("Printed Book 1", BookGenre.FANTASY, author, publisher, "978-1234567890", 5);
-            PrintedBook printedBook2 = new PrintedBook("Printed Book 2", BookGenre.SCIENCE, author, publisher, "978-0987654321", 0);
+            Author author = new Author("Author", "LastName", "description");
+
+            PrintedBook printedBook1 = new PrintedBook(
+                "Printed Book 1",
+                "Description",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author },
+                "9781234567890"
+            );
+            printedBook1.AvailableCopies = 5;
+
+            PrintedBook printedBook2 = new PrintedBook(
+                "Printed Book 2",
+                "Description",
+                new List<BookGenre> { BookGenre.Science },
+                new List<Author> { author },
+                "9780987654321"
+            );
+            printedBook2.AvailableCopies = 0;
 
             Lib library = new Lib("Address");
-            library.Books.Add(printedBook1);
-            library.Books.Add(printedBook2);
+            library.AddBooks(printedBook1);
+            library.AddBooks(printedBook2);
 
             // Act
-            List<PrintedBook> availablePrintedBooks = library.GetPrintedBooks(true);
-            List<PrintedBook> unavailablePrintedBooks = library.GetPrintedBooks(false);
+            IEnumerable<PrintedBook> availablePrintedBooks = library.GetPrintedBooks(true); // Only books with available copies
+            IEnumerable<PrintedBook> unavailablePrintedBooks = library.GetPrintedBooks(false); // Only books with 0 copies
 
             // Assert
-            Assert.AreEqual(1, availablePrintedBooks.Count);
-            Assert.AreEqual(1, unavailablePrintedBooks.Count);
+            Assert.AreEqual(1, availablePrintedBooks.Count());
+            Assert.AreEqual(1, unavailablePrintedBooks.Count());
             Assert.IsTrue(availablePrintedBooks.All(book => book.AvailableCopies > 0));
             Assert.IsTrue(unavailablePrintedBooks.All(book => book.AvailableCopies == 0));
         }
@@ -124,24 +128,53 @@ namespace UnitTests
         public void GetEBooks_ShouldReturnOnlyEBooks()
         {
             // Arrange
-            Author author = new Author("Author", "LastName");
-            Publisher publisher = new Publisher("Publisher", "Publisher Address");
-            PrintedBook printedBook1 = new PrintedBook("Printed Book 1", BookGenre.FANTASY, author, publisher, "978-1234567890", 5);
-            PrintedBook printedBook2 = new PrintedBook("Printed Book 2", BookGenre.SCIENCE, author, publisher, "978-0987654321", 0);
-            EBook eBook1 = new EBook("EBook Title 1", BookGenre.FANTASY, author);
-            EBook eBook2 = new EBook("EBook Title 2", BookGenre.SCIENCE, author);
+            Author author = new Author("Author", "LastName", "description");
+
+            EBook eBook1 = new EBook(
+                "EBook Title 1",
+                "Description",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author },
+                "9781234567890",
+                "http://example.com/preview"
+            );
+
+            EBook eBook2 = new EBook(
+                "EBook Title 2",
+                "Description",
+                new List<BookGenre> { BookGenre.Science },
+                new List<Author> { author },
+                "9780987654321",
+                "http://example.com/preview"
+            );
+
+            PrintedBook printedBook1 = new PrintedBook(
+                "Printed Book 1",
+                "Description",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author },
+                "9781234567890"
+            );
+
+            PrintedBook printedBook2 = new PrintedBook(
+                "Printed Book 2",
+                "Description",
+                new List<BookGenre> { BookGenre.Science },
+                new List<Author> { author },
+                "9780987654321"
+            );
 
             Lib library = new Lib("Address");
-            library.Books.Add(printedBook1);
-            library.Books.Add(printedBook2);
-            library.Books.Add(eBook1);
-            library.Books.Add(eBook2);
+            library.AddBooks(printedBook1);
+            library.AddBooks(printedBook2);
+            library.AddBooks(eBook1);
+            library.AddBooks(eBook2);
 
             // Act
-            List<EBook> eBooks = library.GetEBooks();
+            IEnumerable<EBook> eBooks = library.GetEBooks();
 
             // Assert
-            Assert.AreEqual(2, eBooks.Count);
+            Assert.AreEqual(2, eBooks.Count());
             Assert.IsTrue(eBooks.All(book => book is EBook));
         }
 
@@ -149,16 +182,31 @@ namespace UnitTests
         public void RemoveBook_ShouldRemoveExistingBookFromBooksList()
         {
             // Arrange
-            Author author = new Author("Author", "LastName");
-            Publisher publisher = new Publisher("Publisher", "Publisher Address");
+            Author author = new Author("Author", "LastName", "Biography");
 
-            PrintedBook printedBook = new PrintedBook("Book Title 1", BookGenre.FANTASY, author, publisher, "978-1234567890");
-            EBook eBook = new EBook("EBook Title 1", BookGenre.FANTASY, author);
+            // Updated EBook constructor usage
+            EBook eBook = new EBook(
+                "EBook Title 1",
+                "Description",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author },
+                "9781234567890",
+                "http://example.com/preview"
+            );
+
+            PrintedBook printedBook = new PrintedBook(
+                "Printed Book Title 1",
+                "desciption",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author },
+                "9781234567890"
+            );
 
             Lib library = new Lib("123 Library St");
 
-            library.AddBook(printedBook);
-            library.AddBook(eBook);
+            // Adding books
+            library.AddBooks(printedBook);
+            library.AddBooks(eBook);
 
             // Act
             bool resultPrintedBook = library.RemoveBook(printedBook);
@@ -167,24 +215,44 @@ namespace UnitTests
             // Assert
             Assert.IsTrue(resultPrintedBook);
             Assert.IsTrue(resultEBook);
-            Assert.IsFalse(library.Books.Contains(printedBook));
-            Assert.IsFalse(library.Books.Contains(eBook));
+            Assert.IsFalse(library.Contains(printedBook));
+            Assert.IsFalse(library.Contains(eBook));
         }
 
         [TestMethod]
         public void RemoveBook_ShouldReturnFalse_WhenBookDoesNotExist()
         {
             // Arrange
-            Author author = new Author("Author", "LastName");
-            Publisher publisher = new Publisher("Publisher", "Publisher Address");
+            Author author = new Author("Author", "LastName", "Biography");
 
-            PrintedBook printedBook = new PrintedBook("Nonexistent Book Title", BookGenre.FANTASY, author, publisher, "000-0000000000");
-            EBook eBook = new EBook("Nonexistent EBook Title", BookGenre.FANTASY, author);
+            EBook eBook = new EBook(
+                "Nonexistent EBook Title",
+                "Description",
+                new List<BookGenre> { BookGenre.Science },
+                new List<Author> { author },
+                "0000000000000",
+                "http://example.com/preview"
+            );
+
+            PrintedBook printedBook = new PrintedBook(
+                "Nonexistent Book Title",
+                "Description",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author },
+                "0000000000000"
+            );
 
             Lib library = new Lib("123 Library St");
 
-            PrintedBook existingPrintedBook = new PrintedBook("Existing Book Title", BookGenre.SCIENCE, author, publisher, "978-1234567890");
-            library.AddBook(new PrintedBook("Existing Book Title", BookGenre.SCIENCE, author, publisher, "978-1234567890"));
+            // Adding an existing book in the library
+            PrintedBook existingPrintedBook = new PrintedBook(
+                "Existing Book Title",
+                "Description",
+                new List<BookGenre> { BookGenre.Science },
+                new List<Author> { author },
+                "9781234567890"
+            );
+            library.AddBooks(existingPrintedBook);
 
             // Act
             bool resultPrintedBook = library.RemoveBook(printedBook);
@@ -193,7 +261,67 @@ namespace UnitTests
             // Assert
             Assert.IsFalse(resultPrintedBook);
             Assert.IsFalse(resultEBook);
-            Assert.IsTrue(library.Books.Contains(existingPrintedBook));
+            Assert.IsTrue(library.Contains(existingPrintedBook));
+        }
+
+        [TestMethod]
+        public void GetBooksByAuthor_ShouldReturnBooksByGivenAuthor()
+        {
+            // Arrange
+            Author author1 = new Author("Author", "FirstName", "Biography");
+            Author author2 = new Author("Other", "Author", "Biography");
+
+            PrintedBook printedBook1 = new PrintedBook(
+                "Printed Book 1",
+                "Description",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author1 },
+                "9781234567890"
+            );
+
+            PrintedBook printedBook2 = new PrintedBook(
+                "Printed Book 2",
+                "Description",
+                new List<BookGenre> { BookGenre.Science },
+                new List<Author> { author1 },
+                "9780987654321"
+            );
+
+            EBook eBook1 = new EBook(
+                "EBook Title 1",
+                "Description",
+                new List<BookGenre> { BookGenre.Fantasy },
+                new List<Author> { author2 },
+                "9781234567890",
+                "http://example.com/preview"
+            );
+
+            Lib library = new Lib("Address");
+            library.AddBooks(printedBook1, printedBook2, eBook1);
+
+            // Act
+            var booksByAuthor1 = library.GetBooksByAuthor(author1);
+
+            // Assert
+            Assert.AreEqual(2, booksByAuthor1.Count());
+            Assert.IsTrue(booksByAuthor1.All(book => book.Authors.Contains(author1)));
+
+            // Act for author2
+            var booksByAuthor2 = library.GetBooksByAuthor(author2);
+
+            // Assert
+            Assert.AreEqual(1, booksByAuthor2.Count());
+            Assert.IsTrue(booksByAuthor2.All(book => book.Authors.Contains(author2)));
+        }
+
+        [TestMethod]
+        public void GetBooksByAuthor_ShouldThrowArgumentNullException_WhenAuthorIsNull()
+        {
+            // Arrange
+            Lib library = new Lib("Address");
+
+            // Act & Assert
+            Assert.ThrowsException<ArgumentNullException>(() => library.GetBooksByAuthor(null));
         }
     }
 }

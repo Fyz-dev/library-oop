@@ -1,63 +1,90 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text.RegularExpressions;
 using Library.Enums;
-using Library.Interface;
 
 namespace Library.Entities
 {
-    public class PrintedBook : IBook
+    public class PrintedBook : Book
     {
-        public string Title
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
-
-        public BookGenre Genre
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
-
-        public Author Author
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
-
-        public Publisher Publisher
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
-
-        public string ISBN
-        {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
-        }
+        private string _coverType;
+        private uint _availableCopies;
 
         public uint AvailableCopies
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get => _availableCopies;
+            set
+            {
+                if (value < 0)
+                    throw new ArgumentException("Available copies cannot be negative.");
+
+                _availableCopies = value;
+            }
         }
 
         public string CoverType
         {
-            get => throw new NotImplementedException();
-            set => throw new NotImplementedException();
+            get => _coverType;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    throw new ArgumentException("Cover type cannot be null or empty.");
+
+                if (!Regex.IsMatch(value, @"^[a-zA-Z]+$"))
+                    throw new ArgumentException("Cover type must contain only English letters.");
+
+                _coverType = value;
+            }
         }
+
+        public override string Details => $"{base.Details}\nAvailable Copies: {AvailableCopies}\nCover Type: {CoverType}";
 
         public PrintedBook(
             string title,
-            BookGenre genre,
-            Author author,
-            Publisher publisher,
+            string description,
+            List<BookGenre> genres,
+            List<Author> authors,
             string isbn,
-            uint availableCopies = 0
+            uint availableCopies = 0,
+            string coverType = "Paperback"
         )
+            : base(title, description, genres, authors, isbn)
         {
-            throw new NotImplementedException();
+            ISBN = isbn;
+            AvailableCopies = availableCopies;
+            CoverType = coverType;
+        }
+
+        public override void GetBook(Visitor visitor)
+        {
+            if (visitor == null)
+                throw new ArgumentNullException("Visitor cannot be null.");
+
+            if (AvailableCopies <= 0)
+                throw new InvalidOperationException("No available copies of this book.");
+
+            visitor.TakeBook(this);
+            AvailableCopies--;
+
+            OnPropertyChanged(nameof(Details));
+        }
+
+        public void ReturnBook(Visitor visitor)
+        {
+            if (visitor == null)
+                throw new ArgumentNullException(nameof(visitor), "Visitor cannot be null.");
+
+            visitor.ReturnBook(this);
+            AvailableCopies++;
+        }
+
+        public override string ToString()
+        {
+            string authors = string.Join(" ", Authors.Select(a => a.FullName));
+            string genres = string.Join(" ", Genres);
+
+            return $"{Title} {genres} {authors} {ISBN} {AvailableCopies} {CoverType}";
         }
     }
 }
