@@ -71,7 +71,7 @@
                 <TextBlock
                     Grid.Row="0"
                     Style="{StaticResource SubtitleTextBlockStyle}"
-                    Text="Purchased books" />
+                    Text="Written books" />
 
                 <TextBlock
                     Foreground="{ThemeResource TextFillColorSecondaryBrush}"
